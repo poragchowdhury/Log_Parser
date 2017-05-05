@@ -21,7 +21,19 @@ public class LogParser {
 	}
 	
 	public static void pricePredictorError(){
-		
+		/*
+		@ATTRIBUTE currentTimeSlot NUMERIC
+		@ATTRIBUTE hour NUMERIC
+		@ATTRIBUTE hourAhead NUMERIC
+		@ATTRIBUTE date NUMERIC
+		@ATTRIBUTE month NUMERIC
+		@ATTRIBUTE year NUMERIC
+		@ATTRIBUTE NUMBER_OF_BROKERS NUMERIC
+		@ATTRIBUTE NUMBER_OF_PRODUCERS NUMERIC
+		@ATTRIBUTE PrevDayHAMarketClearingPrice NUMERIC
+		@ATTRIBUTE PrevHAMarketClearingPrice NUMERIC
+		@ATTRIBUTE MarketClearingPrice NUMERIC
+		*/
 	}
 	
 	public static void hourAheadErrorParser(){
