@@ -17,24 +17,85 @@ public class LogParser {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		hourAheadErrorParser();
+		pricePredictorError();
 	}
 	
 	public static void pricePredictorError(){
-		/*
-		@ATTRIBUTE currentTimeSlot NUMERIC
-		@ATTRIBUTE hour NUMERIC
-		@ATTRIBUTE hourAhead NUMERIC
-		@ATTRIBUTE date NUMERIC
-		@ATTRIBUTE month NUMERIC
-		@ATTRIBUTE year NUMERIC
-		@ATTRIBUTE NUMBER_OF_BROKERS NUMERIC
-		@ATTRIBUTE NUMBER_OF_PRODUCERS NUMERIC
-		@ATTRIBUTE PrevDayHAMarketClearingPrice NUMERIC
-		@ATTRIBUTE PrevHAMarketClearingPrice NUMERIC
-		@ATTRIBUTE MarketClearingPrice NUMERIC
-		*/
+		
+		PricePredictor pricePredictor = new PricePredictor("ZI-low-demand-2nd-iteration.model");
+		
+		String fileName = "low_demand_log.csv";
+		File gFile = new File(fileName);
+        if(!gFile.exists()){
+            System.out.println("Load file doesn't exist");
+        	return;
+        }
+        
+        CSVParser parser;
+		try {
+			parser = CSVParser.parse(gFile, StandardCharsets.US_ASCII, CSVFormat.DEFAULT);
+			
+			FileWriter fwOutput2 = new FileWriter(fileName+".PricePredictorErrorUP.csv", true);
+			PrintWriter pwOutput2 = new PrintWriter(new BufferedWriter(fwOutput2));
+			pwOutput2.println("TS,HA,Error,");
+			
+			for (CSVRecord csvRecord : parser) {
+	            Iterator<String> itr = csvRecord.iterator();
+	            /*
+	    		@ATTRIBUTE currentTimeSlot NUMERIC
+	    		@ATTRIBUTE hour NUMERIC
+	    		@ATTRIBUTE hourAhead NUMERIC
+	    		@ATTRIBUTE date NUMERIC
+	    		@ATTRIBUTE month NUMERIC
+	    		@ATTRIBUTE year NUMERIC
+	    		@ATTRIBUTE NUMBER_OF_BROKERS NUMERIC
+	    		@ATTRIBUTE NUMBER_OF_PRODUCERS NUMERIC
+	    		@ATTRIBUTE PrevDayHAMarketClearingPrice NUMERIC
+	    		@ATTRIBUTE PrevHAMarketClearingPrice NUMERIC
+	    		@ATTRIBUTE MarketClearingPrice NUMERIC
+	    		*/
+	            // Time Stamp	
+	            double currentTimeSlot = Double.parseDouble(itr.next());
+	            double hour = Double.parseDouble(itr.next());
+	            double hourAhead = Double.parseDouble(itr.next());
+	            double date = Double.parseDouble(itr.next());
+	            double month = Double.parseDouble(itr.next());
+	            double year = Double.parseDouble(itr.next());
+	            double NUMBER_OF_BROKERS = Double.parseDouble(itr.next());
+	            double NUMBER_OF_PRODUCERS = Double.parseDouble(itr.next());
+	            double PrevDayHAMarketClearingPrice = Double.parseDouble(itr.next());
+	            double PrevHAMarketClearingPrice = Double.parseDouble(itr.next());
+	            double realClearingPrice = Double.parseDouble(itr.next());
+	            
+				double [] param = new double[11];
+				param[0] = currentTimeSlot;
+				param[1] = hour;
+				param[2] = hourAhead;
+				param[3] = date;
+				param[4] = month;
+				param[5] = year;
+				param[6] = NUMBER_OF_BROKERS;
+				param[7] = NUMBER_OF_PRODUCERS;
+				param[8] = PrevDayHAMarketClearingPrice;
+				param[9] = PrevHAMarketClearingPrice;
+				
+				double predictedPrice = pricePredictor.getLimitPrice(param);
+				
+				pwOutput2.println(currentTimeSlot + "," + hourAhead + "," + (realClearingPrice-predictedPrice)+",");
+				
+			}
+			
+			parser.close();
+			pwOutput2.close();
+			fwOutput2.close();
+		}
+		catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
+		
+	
 	
 	public static void hourAheadErrorParser(){
 		double [][] errorValue = new double [7][10];
