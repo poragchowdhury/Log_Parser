@@ -20,10 +20,14 @@ public class LogParser {
 		hourAheadErrorParser();
 	}
 	
+	public static void pricePredictorError(){
+		
+	}
+	
 	public static void hourAheadErrorParser(){
 		double [][] errorValue = new double [7][10];
 		double [][] errorCounter = new double [7][10];
-		String fileName = "high_demand_mcts_HA_prediction_error.csv";
+		String fileName = "low_demand_mcts_HA_prediction_error.csv";
 		File gFile = new File(fileName);
         if(!gFile.exists()){
             System.out.println("Load file doesn't exist");
