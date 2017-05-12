@@ -12,19 +12,21 @@ import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 
 public class LogParser {
-
+	public static String fileName = "C:/Users/mchowdhury4/Dropbox-Research/Dropbox/Files/Spring2017/Research/Results/May 11-2017/graphs2/Results_Price_low.csv";
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		pricePredictorError();
+		//pricePredictorError();
+		//hourAheadErrorParser();
+		costValueParser();
 	}
 	
 	public static void pricePredictorError(){
 		
 		PricePredictor pricePredictor = new PricePredictor("ZI-low-demand-2nd-iteration.model");
 		
-		String fileName = "low_demand_log.csv";
+		
 		File gFile = new File(fileName);
         if(!gFile.exists()){
             System.out.println("Load file doesn't exist");
@@ -100,7 +102,7 @@ public class LogParser {
 	public static void hourAheadErrorParser(){
 		double [][] errorValue = new double [7][10];
 		double [][] errorCounter = new double [7][10];
-		String fileName = "low_demand_mcts_HA_prediction_error.csv";
+		//String fileName = "low_demand_mcts_HA_prediction_error.csv";
 		File gFile = new File(fileName);
         if(!gFile.exists()){
             System.out.println("Load file doesn't exist");
@@ -127,6 +129,7 @@ public class LogParser {
 	            }
 	            else{
 	            	// Check MCTS iteration
+	            	String strTS = itr.next();
 	            	String strDay = itr.next();
 	            	String strHour = itr.next();
 	            	String strHA = itr.next();
@@ -198,10 +201,10 @@ public class LogParser {
 		}
 	}
 	
-	public void costValueParser(){
+	public static void costValueParser(){
 		
 		double [][][] arrAgents = new double[5][7][10];
-		String fileName = "low_demand_Results_Price.csv";
+		//String fileName = "low_demand_Results_Price.csv";
 		File gFile = new File(fileName);
         if(!gFile.exists()){
             System.out.println("Load file doesn't exist");
@@ -248,7 +251,7 @@ public class LogParser {
 			for(int i = 0; i < 5; i++){
 				for(int j = 0; j<7; j++){
 					for(int val =0;val<10;val++){
-						arrAgents[i][j][val] /= 30.00;
+						arrAgents[i][j][val] /= 1.00;
 					}
 				}
 			}
@@ -259,13 +262,33 @@ public class LogParser {
 				pwOutput.println("Graph " + val);
 				pwOutput.println("MCTS,ZI,ZIP,SPOT,MCTSX,MCTS10K");
 				for(int mcts = 0; mcts < 7; mcts++){
-					pwOutput.print(mcts+",");
+					String strMCTS = "";
+					if(mcts == 0)
+						strMCTS = "100";
+					else if(mcts == 1)
+						strMCTS = "1K";
+					else if(mcts == 2)
+						strMCTS = "5K";
+					else if(mcts == 3)
+						strMCTS = "10K";
+					else if(mcts == 4)
+						strMCTS = "15K";
+					else if(mcts == 5)
+						strMCTS = "25K";
+					else if(mcts == 6)
+						strMCTS = "50K";
+					else 
+						strMCTS = "NA";
+					
+					pwOutput.print(strMCTS+",");
+					
 					for(int agent = 0; agent < 5; agent++){
 						pwOutput.print(arrAgents[agent][mcts][val]+",");
 					}
 					pwOutput.println();
 				}
 			}
+			
 			pwOutput.close();
 			fwOutput.close();
 			
