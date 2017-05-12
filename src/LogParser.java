@@ -17,14 +17,16 @@ public class LogParser {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		pricePredictorError();
+		//pricePredictorError();
+		//hourAheadErrorParser();
+		costValueParser();
 	}
 	
 	public static void pricePredictorError(){
 		
-		PricePredictor pricePredictor = new PricePredictor("ZI-low-demand-2nd-iteration.model");
+		PricePredictor pricePredictor = new PricePredictor("ZI-high-demand-2nd-iteration.model");
 		
-		String fileName = "low_demand_log.csv";
+		String fileName = "Results_Price_equal_2017.csv";
 		File gFile = new File(fileName);
         if(!gFile.exists()){
             System.out.println("Load file doesn't exist");
@@ -198,10 +200,10 @@ public class LogParser {
 		}
 	}
 	
-	public void costValueParser(){
+	public static void costValueParser(){
 		
 		double [][][] arrAgents = new double[5][7][10];
-		String fileName = "low_demand_Results_Price.csv";
+		String fileName = "Results_Price_low_2017.csv";
 		File gFile = new File(fileName);
         if(!gFile.exists()){
             System.out.println("Load file doesn't exist");
@@ -248,15 +250,38 @@ public class LogParser {
 			for(int i = 0; i < 5; i++){
 				for(int j = 0; j<7; j++){
 					for(int val =0;val<10;val++){
-						arrAgents[i][j][val] /= 30.00;
+						arrAgents[i][j][val] /= 1.00;
 					}
 				}
 			}
 			
 			FileWriter fwOutput = new FileWriter(fileName+".parsed.csv", true);
 			PrintWriter pwOutput = new PrintWriter(new BufferedWriter(fwOutput));
+			String graphName = "";
+			
 			for(int val = 0; val < 10; val++){
-				pwOutput.println("Graph " + val);
+				if(val == 0)
+					graphName = "Vol_Buy";
+				else if(val == 1)
+					graphName = "Tot_Buy";
+				else if(val == 2)
+					graphName = "UnitBuy";
+				else if(val == 3)
+					graphName = "Vol_Sell";
+				else if(val == 4)
+					graphName = "Tot_Sell";
+				else if(val == 5)
+					graphName = "UnitSell";
+				else if(val == 6)
+					graphName = "Penalty";
+				else if(val == 7)
+					graphName = "Profit";
+				else if(val == 8)
+					graphName = "Net";
+				else if(val == 9)
+					graphName = "PercBuy";
+				
+				pwOutput.println("Graph " + val + " " + graphName);
 				pwOutput.println("MCTS,ZI,ZIP,SPOT,MCTSX,MCTS10K");
 				for(int mcts = 0; mcts < 7; mcts++){
 					pwOutput.print(mcts+",");
